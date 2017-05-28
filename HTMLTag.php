@@ -108,7 +108,8 @@ class HTMLTag
             array_key_exists($this->tag, self::$requiredAttributes) &&
             ! array_key_exists(self::$requiredAttributes[$this->tag], $this->attributes)
         ) {
-            throw new LogicException();
+            $requiredAttribute = self::$requiredAttributes[$this->tag];
+            throw new LogicException("\"$this->tag\" is missing a required attribute: \"$requiredAttribute\"");
         }
 
         echo "<$this->tag";
@@ -129,7 +130,7 @@ class HTMLTag
     public function close()
     {
         if ($this->isVoid()) {
-            throw new LogicException("$this->tag does't have a closing tag.");
+            throw new LogicException("\"$this->tag\" does't have a closing tag.");
         }
 
         echo "</$this->tag>";
