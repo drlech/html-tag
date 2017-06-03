@@ -170,6 +170,16 @@ class HTMLTag
     }
 
     /**
+     * Change this tag to another one.
+     *
+     * @param string $newTag New HTML tag name.
+     */
+    public function changeTo($newTag)
+    {
+        $this->tag = $newTag;
+    }
+
+    /**
      * Add attributes or styles.
      *
      * @param array|string $attribute Name of the attribute, or array of attributes to add.
