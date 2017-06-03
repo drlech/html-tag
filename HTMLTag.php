@@ -86,13 +86,14 @@ class HTMLTag
      */
     public function __construct($tag, $attributes = [])
     {
-        $this->tag        = $tag;
-        $this->attributes = $attributes;
+        $this->tag = $tag;
 
-        if (is_string($this->attributes)) {
-            $this->classes[] = $this->attributes;
+        if (is_string($attributes)) {
+            $this->addClass($attributes);
 
             return;
+        } else {
+            $this->attributes = $attributes;
         }
 
         if (isset($this->attributes['class'])) {
@@ -300,6 +301,110 @@ class HTMLTag
         }
 
         $this->data[$data] = $value;
+    }
+
+    /**
+     * Remove the attribute from the tag.
+     * For classes, styles, and data-* attributes, $value can be passed to specify which attribute
+     * should be removed.
+     * If $value is false then the attribute will be removed from the tag entirely.
+     *
+     * @param string $attribute Name of the attribute to remove.
+     * @param bool   $value     Value of the attribute to remove.
+     */
+    public function remove($attribute, $value = false)
+    {
+        if ('class' === $attribute) {
+            if (false === $value) {
+                $this->classes = [];
+            } else {
+                $this->removeClass($value);
+            }
+        }
+
+        if ('styles' === $attribute) {
+            if (false === $value) {
+                $this->styles = [];
+            } else {
+                $this->removeStyle($value);
+            }
+        }
+
+        if ('data' === $attribute) {
+            if (false === $value) {
+                $this->data = [];
+            } else {
+                $this->removeData($value);
+            }
+        }
+
+        if (isset($this->attributes[$attribute])) {
+            unset($this->attributes[$attribute]);
+        }
+    }
+
+    /**
+     * Remove class or multiple classes from the tag.
+     * When passing string as $class it can be a single class, or multiple classes
+     * separated by a space (like in HTML).
+     *
+     * @param string|array $class
+     */
+    public function removeClass($class)
+    {
+        $class = preg_split('/ /', $class);
+        if (1 === count($class)) {
+            $class = $class[0];
+        }
+
+        if (is_array($class)) {
+            foreach ($class as $c) {
+                $this->removeClass($c);
+            }
+
+            return;
+        }
+
+        $key = array_search($class, $this->classes);
+        if ($key !== false) {
+            unset($this->classes[$key]);
+        }
+    }
+
+    /**
+     * Remove styles from the tag.
+     *
+     * @param string|array $style CSS property or an array of CSS properties to remove.
+     */
+    public function removeStyle($style)
+    {
+        if (is_array($style)) {
+            foreach ($style as $s) {
+                $this->removeStyle($s);
+            }
+
+            return;
+        }
+
+        unset($this->styles[$style]);
+    }
+
+    /**
+     * Remove data-* attributes from the tag.
+     *
+     * @param string|array $data Name of the data-* attribute, or array of data-* attributes to remove.
+     */
+    public function removeData($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $d) {
+                $this->removeData($d);
+            }
+
+            return;
+        }
+
+        unset($this->data[$data]);
     }
 
     /**
