@@ -108,9 +108,9 @@ class HTMLTag
             unset($this->attributes['class']);
         }
 
-        if (isset($this->attributes['styles'])) {
-            $this->styles = $this->attributes['styles'];
-            unset($this->attributes['styles']);
+        if (isset($this->attributes['style'])) {
+            $this->styles = $this->attributes['style'];
+            unset($this->attributes['style']);
         }
 
         if (isset($this->attributes['data'])) {
@@ -322,7 +322,7 @@ class HTMLTag
             }
         }
 
-        if ('styles' === $attribute) {
+        if ('style' === $attribute) {
             if (false === $value) {
                 $this->styles = [];
             } else {
