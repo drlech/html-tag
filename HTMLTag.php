@@ -18,6 +18,13 @@ class HTMLTag
     private $attributes = [];
 
     /**
+     * All classes belonging to the tag.
+     *
+     * @var array
+     */
+    private $classes = [];
+
+    /**
      * Contents of the "style" attribute, as associative array.
      *
      * @var array
@@ -76,20 +83,32 @@ class HTMLTag
      *
      * @param string $tag        Tag name.
      * @param array  $attributes Associative array of attributes.
-     * @param array  $styles     Contents of the "style" attribute.
      */
-    public function __construct($tag, $attributes = [], $styles = [])
+    public function __construct($tag, $attributes = [])
     {
         $this->tag        = $tag;
         $this->attributes = $attributes;
-        $this->styles     = $styles;
 
         if (is_string($this->attributes)) {
-            $this->attributes = ['class' => $this->attributes];
+            $this->classes[] = $this->attributes;
+
+            return;
+        }
+
+        if (isset($this->attributes['class'])) {
+            if (is_string($this->attributes['class'])) {
+                $this->addClass($this->attributes['class']);
+            } else {
+                foreach ($this->attributes['class'] as $class) {
+                    $this->addClass($class);
+                }
+            }
+
+            unset($this->attributes['class']);
         }
 
         if (isset($this->attributes['styles'])) {
-            $this->styles = $styles + $this->attributes['styles'];
+            $this->styles = $this->attributes['styles'];
             unset($this->attributes['styles']);
         }
 
@@ -182,6 +201,12 @@ class HTMLTag
      */
     private function addAttribute($attribute, $value)
     {
+        if ('class' === $attribute) {
+            $this->addClass($value);
+
+            return;
+        }
+
         if ('style' === $attribute) {
             $this->addStyle($value);
 
@@ -195,6 +220,34 @@ class HTMLTag
         }
 
         $this->attributes[$attribute] = $value;
+    }
+
+    /**
+     * Add classes to the tag.
+     *
+     * @param string|array $class Class to add, or an array of classes to add.
+     */
+    public function addClass($class)
+    {
+        if (is_string($class)) {
+            $class = preg_split('/ /', $class);
+        }
+
+        if (1 === count($class)) {
+            $class = $class[0];
+        }
+
+        if (is_array($class)) {
+            foreach ($class as $c) {
+                $this->addClass($c);
+            }
+
+            return;
+        }
+
+        if ( ! in_array($class, $this->classes)) {
+            $this->classes[] = $class;
+        }
     }
 
     /**
@@ -255,6 +308,7 @@ class HTMLTag
     private function printAttributes()
     {
         $this->printCommonAttributes();
+        $this->printClasses();
         $this->printData();
         $this->printStyles();
     }
@@ -271,6 +325,15 @@ class HTMLTag
 
             echo " $name=\"$value\"";
         }
+    }
+
+    /**
+     * Print all classes.
+     */
+    private function printClasses()
+    {
+        $classes = implode(' ', $this->classes);
+        echo " class=\"$classes\"";
     }
 
     /**
