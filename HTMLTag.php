@@ -342,6 +342,10 @@ class HTMLTag
      */
     private function printClasses()
     {
+        if (empty($this->classes)) {
+            return;
+        }
+
         $classes = implode(' ', $this->classes);
         echo " class=\"$classes\"";
     }
