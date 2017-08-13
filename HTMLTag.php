@@ -138,7 +138,7 @@ class HTMLTag
         $this->printAttributes();
 
         if ($this->isVoid()) {
-            echo '/';
+            echo ' /';
         }
 
         echo '>';
