@@ -92,9 +92,9 @@ class HTMLTag
             $this->addClass($attributes);
 
             return;
-        } else {
-            $this->attributes = $attributes;
         }
+
+        $this->attributes = $attributes;
 
         if (isset($this->attributes['class'])) {
             if (is_string($this->attributes['class'])) {
