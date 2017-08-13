@@ -174,10 +174,14 @@ class HTMLTag
      * Change this tag to another one.
      *
      * @param string $newTag New HTML tag name.
+     *
+     * @return self Self, for chaining.
      */
     public function changeTo($newTag)
     {
         $this->tag = $newTag;
+
+        return $this;
     }
 
     /**
@@ -185,6 +189,8 @@ class HTMLTag
      *
      * @param array|string $attribute Name of the attribute, or array of attributes to add.
      * @param bool         $value     Value of attribute to add, if $attribute is a string.
+     *
+     * @return self Self, for chaining.
      */
     public function add($attribute, $value = false)
     {
@@ -193,14 +199,16 @@ class HTMLTag
                 $this->addAttribute($name, $attributeValue);
             }
 
-            return;
+            return $this;
         }
 
         if ( ! $value) {
-            return;
+            return $this;
         }
 
         $this->addAttribute($attribute, $value);
+
+        return $this;
     }
 
     /**
@@ -209,34 +217,40 @@ class HTMLTag
      *
      * @param string $attribute Name of the attribute to add.
      * @param mixed  $value     Value of the attribute.
+     *
+     * @return self Self, for chaining.
      */
     private function addAttribute($attribute, $value)
     {
         if ('class' === $attribute) {
             $this->addClass($value);
 
-            return;
+            return $this;
         }
 
         if ('style' === $attribute) {
             $this->addStyle($value);
 
-            return;
+            return $this;
         }
 
         if ('data' === $attribute) {
             $this->addData($value);
 
-            return;
+            return $this;
         }
 
         $this->attributes[$attribute] = $value;
+
+        return $this;
     }
 
     /**
      * Add classes to the tag.
      *
      * @param string|array $class Class to add, or an array of classes to add.
+     *
+     * @return self Self, for chaining.
      */
     public function addClass($class)
     {
@@ -253,12 +267,14 @@ class HTMLTag
                 $this->addClass($c);
             }
 
-            return;
+            return $this;
         }
 
         if ( ! in_array($class, $this->classes)) {
             $this->classes[] = $class;
         }
+
+        return $this;
     }
 
     /**
@@ -266,20 +282,24 @@ class HTMLTag
      *
      * @param string|array $style CSS property, or array of styles.
      * @param bool         $value CSS value, if $style is a string.
+     *
+     * @return self Self, for chaining.
      */
     public function addStyle($style, $value = false)
     {
         if (is_array($style)) {
             $this->styles = array_merge($this->styles, $style);
 
-            return;
+            return $this;
         }
 
         if ( ! $value) {
-            return;
+            return $this;
         }
 
         $this->styles[$style] = $value;
+
+        return $this;
     }
 
     /**
@@ -287,20 +307,24 @@ class HTMLTag
      *
      * @param string|array $data  data-* attribute name, or array of data-* attributes.
      * @param bool         $value data-* attribute value, if $data is a string.
+     *
+     * @return self Self, for chaining.
      */
     public function addData($data, $value = false)
     {
         if (is_array($data)) {
             $this->data = array_merge($this->data, $data);
 
-            return;
+            return $this;
         }
 
         if ( ! $value) {
-            return;
+            return $this;
         }
 
         $this->data[$data] = $value;
+
+        return $this;
     }
 
     /**
@@ -311,6 +335,8 @@ class HTMLTag
      *
      * @param string $attribute Name of the attribute to remove.
      * @param bool   $value     Value of the attribute to remove.
+     *
+     * @return self Self, for chaining.
      */
     public function remove($attribute, $value = false)
     {
@@ -341,6 +367,8 @@ class HTMLTag
         if (isset($this->attributes[$attribute])) {
             unset($this->attributes[$attribute]);
         }
+
+        return $this;
     }
 
     /**
@@ -349,6 +377,8 @@ class HTMLTag
      * separated by a space (like in HTML).
      *
      * @param string|array $class
+     *
+     * @return self Self, for chaining.
      */
     public function removeClass($class)
     {
@@ -362,19 +392,23 @@ class HTMLTag
                 $this->removeClass($c);
             }
 
-            return;
+            return $this;
         }
 
         $key = array_search($class, $this->classes);
         if ($key !== false) {
             unset($this->classes[$key]);
         }
+
+        return $this;
     }
 
     /**
      * Remove styles from the tag.
      *
      * @param string|array $style CSS property or an array of CSS properties to remove.
+     *
+     * @return self Self, for chaining.
      */
     public function removeStyle($style)
     {
@@ -383,16 +417,20 @@ class HTMLTag
                 $this->removeStyle($s);
             }
 
-            return;
+            return $this;
         }
 
         unset($this->styles[$style]);
+
+        return $this;
     }
 
     /**
      * Remove data-* attributes from the tag.
      *
      * @param string|array $data Name of the data-* attribute, or array of data-* attributes to remove.
+     *
+     * @return self Self, for chaining.
      */
     public function removeData($data)
     {
@@ -401,10 +439,12 @@ class HTMLTag
                 $this->removeData($d);
             }
 
-            return;
+            return $this;
         }
 
         unset($this->data[$data]);
+
+        return $this;
     }
 
     /**
