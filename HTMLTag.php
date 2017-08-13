@@ -119,6 +119,8 @@ class HTMLTag
         }
     }
 
+    /* Public API */
+
     /**
      * Print the opening tag.
      */
@@ -456,6 +458,8 @@ class HTMLTag
     {
         return in_array($this->tag, self::$voidElements);
     }
+
+    /* Private API */
 
     /**
      * Print HTML attributes associated with this HTML tag.
