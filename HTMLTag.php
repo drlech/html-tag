@@ -72,7 +72,6 @@ class HTMLTag
     private static $requiredAttributes = [
         'a'      => 'href',
         'embed'  => 'src',
-        'img'    => 'src',
         'iframe' => 'src',
         'input'  => 'type',
         'source' => 'src'
